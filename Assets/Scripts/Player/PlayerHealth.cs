@@ -9,13 +9,13 @@ public class PlayerHealth : MonoBehaviour
     public int currentHealth;
 
     [Header("Feedback visual (opcional)")]
-    public Renderer[] renderersParaFlash; // arraste os meshes do player aqui, se quiser o flash de dano
+    public Renderer[] renderersParaFlash;
     public float flashDuration = 0.15f;
     public Color flashColor = Color.red;
 
     [Header("Eventos (conecte no Inspector)")]
-    public UnityEvent<int, int> onHealthChanged; // (atual, maximo) -> liga no GameManager.UpdateHealthUI
-    public UnityEvent onDeath;                   // -> liga no GameManager.OnPlayerDeath (via método privado, ver GameManager)
+    public UnityEvent<int, int> onHealthChanged; 
+    public UnityEvent onDeath;                   
 
     private Color[] originalColors;
 
