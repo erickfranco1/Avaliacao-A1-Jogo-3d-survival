@@ -1,21 +1,55 @@
+
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    bool hasCoin = false;
+
     [Header("Ataque")]
     public float attackRange = 8f;
     public float attackInterval = 1f;
     public GameObject projectilePrefab;
-    public Transform firePoint;   
+    public GameObject projectile2Prefab;
+    public GameObject coinPrefab;
+    public Transform firePoint;
     public LayerMask enemyLayer;
 
     private float nextAttackTime;
+
+    Transform FindNearestEnemy()
+    {
+        Collider[] hits = Physics.OverlapSphere(
+            transform.position,
+            attackRange,
+            enemyLayer
+        );
+
+        Transform nearest = null;
+        float nearestDist = Mathf.Infinity;
+
+        foreach (Collider hit in hits)
+        {
+            float dist = Vector3.Distance(
+                transform.position,
+                hit.transform.position
+            );
+
+            if (dist < nearestDist)
+            {
+                nearestDist = dist;
+                nearest = hit.transform;
+            }
+        }
+
+        return nearest;
+    }
 
     void Update()
     {
         if (Time.time < nextAttackTime) return;
 
         Transform nearestEnemy = FindNearestEnemy();
+
         if (nearestEnemy != null)
         {
             Shoot(nearestEnemy);
@@ -23,35 +57,51 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    Transform FindNearestEnemy()
+    public void SetCoinCollected()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
-        Transform nearest = null;
-        float nearestDist = Mathf.Infinity;
-
-        foreach (Collider hit in hits)
-        {
-            float dist = Vector3.Distance(transform.position, hit.transform.position);
-            if (dist < nearestDist)
-            {
-                nearestDist = dist;
-                nearest = hit.transform;
-            }
-        }
-        return nearest;
+        hasCoin = true;
     }
 
-    void Shoot(Transform target)
+    public void Shoot(Transform target)
     {
-        Vector3 spawnPos = firePoint != null ? firePoint.position : transform.position + Vector3.up;
-        GameObject proj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
+        if (hasCoin)
+        {
+            SpecialAttack(target);
+            hasCoin = false;
+        }
+        else
+        {
+            NormalAttack(target);
+        }
+    }
+
+    void NormalAttack(Transform target)
+    {
+        Vector3 spawnPos = firePoint != null
+            ? firePoint.position
+            : transform.position + Vector3.up;
+
+        GameObject proj = Instantiate(
+            projectilePrefab,
+            spawnPos,
+            Quaternion.identity
+        );
+
         proj.GetComponent<Projectile>().SetTarget(target);
     }
 
-    // desenha o alcance de ataque no Editor
-    void OnDrawGizmosSelected()
+    void SpecialAttack(Transform target)
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Vector3 spawnPos = firePoint != null
+            ? firePoint.position
+            : transform.position + Vector3.up;
+
+        GameObject proj = Instantiate(
+            projectile2Prefab,
+            spawnPos,
+            Quaternion.identity
+        );
+
+        proj.GetComponent<Projectile>().SetTarget(target);
     }
 }
