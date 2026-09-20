@@ -24,7 +24,7 @@ public class EnemyHealth : MonoBehaviour
     void Die()
     {
         onAnyEnemyDeath.Invoke();
-        // se quiser, instancie aqui um efeito de partícula/som antes de destruir
+        //efeito de partícula/som antes de destruir pode vir aquiu
         Destroy(gameObject);
     }
 }
