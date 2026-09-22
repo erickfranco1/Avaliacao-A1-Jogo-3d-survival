@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.Cinemachine;
 
 // Anexe no GameObject "Player".
 public class PlayerHealth : MonoBehaviour
@@ -13,9 +14,12 @@ public class PlayerHealth : MonoBehaviour
     public float flashDuration = 0.15f;
     public Color flashColor = Color.red;
 
+    [Header("Feedback de câmera (opcional)")]
+    public CinemachineImpulseSource impulseSource; 
+
     [Header("Eventos (conecte no Inspector)")]
-    public UnityEvent<int, int> onHealthChanged; 
-    public UnityEvent onDeath;                   
+    public UnityEvent<int, int> onHealthChanged;
+    public UnityEvent onDeath;
 
     private Color[] originalColors;
 
@@ -41,6 +45,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (renderersParaFlash != null && renderersParaFlash.Length > 0)
             StartCoroutine(FlashRoutine());
+
+        if (impulseSource != null)
+            impulseSource.GenerateImpulse();
 
         if (currentHealth <= 0)
             onDeath?.Invoke();

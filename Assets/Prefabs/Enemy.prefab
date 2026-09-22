@@ -166,6 +166,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 30
+  deathEffectPrefab: {fileID: 8101837909545677877, guid: 6743063532559b141b2aa9ca3702c1a9, type: 3}
+  deathEffectLifetime: 2
 --- !u!54 &6611291709870934538
 Rigidbody:
   m_ObjectHideFlags: 0

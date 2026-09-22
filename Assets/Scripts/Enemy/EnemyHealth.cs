@@ -7,6 +7,10 @@ public class EnemyHealth : MonoBehaviour
     public int maxHealth = 30;
     private int currentHealth;
 
+    [Header("Efeito de morte")]
+    public GameObject deathEffectPrefab; 
+    public float deathEffectLifetime = 2f; 
+
     public static UnityEvent onAnyEnemyDeath = new UnityEvent();
 
     void Awake()
@@ -24,7 +28,13 @@ public class EnemyHealth : MonoBehaviour
     void Die()
     {
         onAnyEnemyDeath.Invoke();
-        //efeito de partícula/som antes de destruir pode vir aquiu
+
+        if (deathEffectPrefab != null)
+        {
+            GameObject effect = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(effect, deathEffectLifetime);
+        }
+
         Destroy(gameObject);
     }
 }

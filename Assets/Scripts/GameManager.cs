@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Referências")]
     public PlayerHealth playerHealth;
+    public GameObject gameOverCamera; 
 
     private float elapsedTime;
     private bool gameEnded;
@@ -46,14 +47,14 @@ public class GameManager : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    // conecta no evento "On Health Changed" do playerHealth
+    
     public void UpdateHealthUI(int current, int max)
     {
         if (healthText != null)
             healthText.text = $"Vida: {current}/{max}";
     }
 
-    // conecta no "On Death" do PlayerHealth, no inspetor
+    
     public void OnPlayerDeath()
     {
         EndGame(false);
@@ -61,7 +62,7 @@ public class GameManager : MonoBehaviour
 
     void OnEnemyKilled()
     {
-        // espaço livre pra um contador de mortes/pontuação, caso chegue a expandir
+        // espaço livre pra um contador de mortes/pontuação
     }
 
     void EndGame(bool victory)
@@ -69,10 +70,13 @@ public class GameManager : MonoBehaviour
         gameEnded = true;
         gameOverPanel.SetActive(true);
         gameOverMessage.text = victory ? "Você sobreviveu!" : "Game Over";
+
+        if (gameOverCamera != null)
+            gameOverCamera.SetActive(true);
+
         Time.timeScale = 0f;
     }
 
-    // conecta este método no OnClick do botão "Reiniciar" da UI
     public void RestartGame()
     {
         Time.timeScale = 1f;
